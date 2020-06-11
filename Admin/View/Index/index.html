@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN" style="height: 100%;">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Book Lending Management System</title>
+	<script src="./Resources/jquery.min.js"></script>
+	<link rel="stylesheet" href="./Resources/bootstrap.min.css">
+	<script src="./Resources/bootstrap.min.js"></script>
+</head>
+
+<body style="background-image: url(./Resources/img/welcome.jpg);background-size:100% 100%;">
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav" aria-expanded="false">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="JavaScript:void(0)">
+          <b>Book Lending Management System</b>
+        </a>
+      </div>
+
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="nav">
+        <ul class="nav navbar-nav">
+          <li class="active">
+            <a href="?p=Admin&c=Index&a=index">Homepage</a>
+          </li>
+          <li>
+            <a href="?p=Admin&c=Book&a=index">Book Management</a>
+          </li>
+          <li>
+            <a href="?p=Admin&c=User&a=index">User Management</a>
+          </li>
+          <li>
+            <a href="?p=Admin&c=Borrow&a=index">lending Management</a>
+          </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li>
+            <a href="JavaScript:void(0)" style="cursor:default">{<$smarty.session.userId>}</a>
+          </li>
+          <li>
+            <a href="?p=Common&c=Login&a=logout">Logout</a>
+          </li>
+          </li>
+        </ul>
+      </div>
+      <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+  </nav>
+  <div class="container">
+    <div class="center-block" style="position: absolute;left:50%;top:50%;margin-left: -250px;margin-top: -200px;padding:20px;width:500px;background-color:rgba(255, 255, 255, 0.55);border-radius:30px;">
+      <h3 class="text-center"> Administrator {<$smarty.session.userId>}，Welcome! <br><br>You can click the top left corner to manage</h3>
+      <h3 class="text-center" style="margin-top:70px;">There are currently {<$bookNum>} books in total</h3>
+      <h3 class="text-center">There are currently {<$userNum>} users in total</h3>
+      <h4 class="text-center" style="margin-top:70px;">Last login time：</h4>
+      <h4 class="text-center">{<$smarty.session.last_login_time>}</h4>
+    </div>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Book Lending Management System</title>
+    <script src="./Resources/jquery.min.js"></script>
+    <link rel="stylesheet" href="./Resources/bootstrap.min.css">
+    <script src="./Resources/bootstrap.min.js"></script>
+</head>
+
+<body style="background-image: url(./Resources/img/background2.jpg);background-size:cover;">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav" aria-expanded="false">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="JavaScript:void(0)">
+                    <b>Book Lending Management System</b>
+                </a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="nav">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="?p=Admin&c=Index&a=index">Homepage</a>
+                    </li>
+                    <li>
+                        <a href="?p=Admin&c=Book&a=index">Book Management</a>
+                    </li>
+                    <li class="active">
+                        <a href="?p=Admin&c=User&a=index">User Management</a>
+                    </li>
+                    <li>
+                        <a href="?p=Admin&c=Borrow&a=index">Lending Management</a>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="JavaScript:void(0)" style="cursor:default">{<$smarty.session.userId>}</a>
+                    </li>
+                    <li>
+                        <a href="?p=Common&c=Login&a=logout">Logout</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+    <div class="h3 text-center" style="margin-top: 100px;">
+        <b>Add User</b>
+    </div>
+    <form id="form" class="form-horizontal text-center" style="width:250px;margin: 20px auto 0;">
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-addon">User ID</div>
+                <input type="text" class="form-control" placeholder="Please Enter User ID" name="userId">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-addon">Password</div>
+                <input type="password" class="form-control" placeholder="Please Enter Password" name="password">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-addon">Name</div>
+                <input type="text" class="form-control" placeholder="Please Enter Name" name="name">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-addon">Library</div>
+                <input type="text" class="form-control" placeholder="Please Enter Library" name="class">
+            </div>
+        </div>
+		<div class="form-group">
+            <div class="input-group">
+                <div class="input-group-addon">Mobile</div>
+                <input type="text" class="form-control" placeholder="Please Enter Mobile" name="mobile">
+            </div>
+        </div>
+		<div class="form-group">
+            <div class="input-group">
+                <div class="input-group-addon">QQ</div>
+                <input type="text" class="form-control" placeholder="Please Enter QQ" name="qq">
+            </div>
+        </div>
+		<div class="form-group">
+            <div class="input-group">
+                <div class="input-group-addon">Email</div>
+                <input type="text" class="form-control" placeholder="Please Enter Email" name="email">
+            </div>
+        </div>
+		<div class="form-group">
+            <div class="input-group">
+                <div class="input-group-addon">Postcode</div>
+                <input type="text" class="form-control" placeholder="Please Enter Postcode" name="postcode">
+            </div>
+        </div>
+		<div class="form-group">
+            <div class="input-group">
+                <div class="input-group-addon">Address</div>
+                <input type="text" class="form-control" placeholder="Please Enter Address" name="address">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-addon">Status</div>
+                <select name="status" class="form-control">
+                    <option value="1">Normal</option>
+                    <option value="0">Report the loss</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <button type="button" id="submit" class="btn btn-primary" style="margin-right: 10px">Add</button>
+            <button type="reset" id="reset" class="btn btn-danger" style="margin-left: 10px">Reset</button>
+        </div>
+    </form>
+</body>
+
+<script>
+
+    $(function(){
+
+        $("#submit").click(function(){
+            $.post({
+                url: "?p=Admin&c=User&a=insert",
+                data: $("#form").serialize(),
+                success: function(data){
+                    alert(data.message);
+                    if(data.code == 0){
+                        $("#reset").click();
+                    }
+                }
+            })
+        });
+
+    })
+
+</script>
+
+</html>

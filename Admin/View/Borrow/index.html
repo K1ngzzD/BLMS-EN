@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Book Lending Management System</title>
+    <script src="./Resources/jquery.min.js"></script>
+    <link rel="stylesheet" href="./Resources/bootstrap.min.css">
+    <script src="./Resources/bootstrap.min.js"></script>
+    <style type="text/css">
+        td {
+            vertical-align: middle !important;
+        }
+    </style>
+</head>
+
+<body style="background-image: url(./Resources/img/welcome.jpg);background-size:100%;">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav" aria-expanded="false">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="JavaScript:void(0)">
+                    <b>Book Lending Management System</b>
+                </a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="nav">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="?p=Admin&c=Index&a=index">Homepage</a>
+                    </li>
+                    <li>
+                        <a href="?p=Admin&c=Book&a=index">Book Management</a>
+                    </li>
+                    <li>
+                        <a href="?p=Admin&c=User&a=index">User Management</a>
+                    </li>
+                    <li class="active">
+                        <a href="?p=Admin&c=Borrow&a=index">Lending Management</a>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="JavaScript:void(0)" style="cursor:default">{<$smarty.session.userId>}</a>
+                    </li>
+                    <li>
+                        <a href="?p=Common&c=Login&a=logout">Logout</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+    
+    <div class="container" style="width: 430px;height:300px;background-color:rgba(255,255,255,0.5);position: absolute;left:50%;top:50%;margin-left: -215px;margin-top: -150px;">
+        <div class="h3 text-center">
+        <b>Lending Management<br>(Simulate machine scan operation)</b>
+    </div>
+		<form id="form">
+            <div class="form-group">
+                <div class="input-group">
+                    <div class="input-group-addon">User ID</div>
+                    <input type="text" class="form-control" name="userId" placeholder="Please Enter User ID">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input-group">
+                    <div class="input-group-addon">Book Number</div>
+                    <input type="text" class="form-control" name="bookId" placeholder="Please Book Number">
+                </div>
+            </div>
+            <div class="from-control text-center" style="margin-top: 25px;">
+                <b>Operation：&nbsp;&nbsp;</b>
+                <label>
+                    <input type="radio" name="action" value="borrow" checked>
+                    <span>Lending</span>
+                </label>
+                &nbsp;&nbsp;
+                <label>
+                    <input type="radio" name="action" value="return">
+                    <span>Return</span>
+                </label>
+            </div>
+            <div class="text-center" style="margin-top: 20px;">
+                <button type="button" id="submit" class="btn btn-info">Confirm</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                <button type="reset" class="btn btn-danger">Reset</button>
+            </div>
+        </form>
+    </div>
+</body>
+<script>
+    $(function(){
+
+        $("#submit").click(function(){
+            if($("[name='userId']").val().length == 0 || $("[name='bookId']").val().length == 0){
+                alert("Please complete the information");
+                return false;
+            }
+            $.post({
+                url: "?p=Admin&c=Borrow&a=manage",
+                data: $("#form").serialize(),
+                success:function(data){
+                    alert(data.message);
+                }
+            })
+        })
+
+    })
+</script>
+</html>

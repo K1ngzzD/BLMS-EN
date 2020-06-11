@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Book Lending Management System</title>
+    <script src="./Resources/jquery.min.js"></script>
+    <link rel="stylesheet" href="./Resources/bootstrap.min.css">
+    <script src="./Resources/bootstrap.min.js"></script>
+    <style type="text/css">
+        td {
+            vertical-align: middle !important;
+        }
+    </style>
+</head>
+
+<body style="background-image: url(./Resources/img/background.jpg);background-size:100%;">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav" aria-expanded="false">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="JavaScript:void(0)">
+                    <b>Book Lending Management System</b>
+                </a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="nav">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="?p=Admin&c=Index&a=index">Homepage</a>
+                    </li>
+                    <li class="active">
+                        <a href="?p=Admin&c=Book&a=index">Book Management</a>
+                    </li>
+                    <li>
+                        <a href="?p=Admin&c=User&a=index">User Management</a>
+                    </li>
+                    <li>
+                        <a href="?p=Admin&c=Borrow&a=index">Lending Management</a>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="JavaScript:void(0)" style="cursor:default">{<$smarty.session.userId>}</a>
+                    </li>
+                    <li>
+                        <a href="?p=Common&c=Login&a=logout">Logout</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+    <div class="container-fluid">
+        <div style="width:550px;" class="center-block">
+            <div class="form-inline">
+                <div class="form-group">
+                    <input type="text" id="input" class="form-control" placeholder="Enter search content" name="keyword" style="width:180px;"
+                           {<if $mode == keyword>}value='{<$smarty.get.keyword>}'
+						   {<else if $mode == bookId>}value='{<$smarty.get.bookId>}'
+						   {<else if $mode == keyworda>}value='{<$smarty.get.keyworda>}'
+						   {<else if $mode == keyworda>}value='{<$smarty.get.keywordp>}'
+						   {<else if $mode == keyworda>}value='{<$smarty.get.keywordi>}'
+						   {</if>}>
+                </div>
+                <div class="form-group">
+                    <select name="type" class="form-control">
+                        <option value="author" {<if $mode == keyword>}selected{</if>}>Search by book author</option>
+						<option value="name" {<if $mode == keyworda>}selected{</if>}>Search by book name</option>
+                        <option value="num" {<if $mode == bookId>}selected{</if>}>Search by book number</option>
+						<option value="press" {<if $mode == keywordp>}selected{</if>}>Search by book publisher</option>
+						<option value="isbn" {<if $mode == keywordi>}selected{</if>}>Search by book ISBN</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button type="button" id="research" class="btn btn-primary">Search</button>
+                </div>
+            </div>
+        </div>
+        <a class="btn btn-info pull-right" href="?p=Admin&c=Book&a=add" style="margin:15px 10px 10px;">Add Book</a>
+        <table class="table table-bordered table-hover text-center" style="background-color:rgba(255,255,255,0.5)">
+            <thead>
+                <tr class="active">
+                    <th class="text-center">Book Number</th>
+                    <th class="text-center">Book Name</th>
+                    <th class="text-center">Author</th>
+					<th class="text-center">Publisher</th>
+					<th class="text-center">ISBN</th>
+                    <th class="text-center" style="width: 150px;">Status</th>
+                    <th class="text-center" style="width: 150px;">Operation</th>
+                </tr>
+            </thead>
+            <tbody>
+                {<if empty($books)>}
+                    <tr>
+                        <td colspan="5">No record！</td>
+                    </tr>
+                {</if>}
+                {<foreach $books as $book>}
+                    <tr>
+                        <td>{<$book.id>}</td>
+                        <td>
+                            <a href="?p=Admin&c=Book&a=detail&id={<$book.id>}">{<$book.name>}</a>
+                        </td>
+                        <td>{<$book.author>}</td>
+						<td>{<$book.press>}</td>
+						<td>{<$book.ISBN>}</td>
+                        {<if $book.user_id == "">}
+                            <td class="success">In the library</td>
+                        {<else>}
+                            <td class="danger">Lent out</td>
+                        {</if>}
+                        <td>
+                            <a href="?p=Admin&c=Book&a=edit&id={<$book.id>}" class="btn btn-success btn-xs">Modify</a>&nbsp;
+                            <button class="btn btn-danger btn-xs delete" bookId="{<$book.id>}">Delete</button>
+                        </td>
+                    </tr>
+                {</foreach>}
+            </tbody>
+        </table>
+
+        <!-- 分页 -->
+        {<$pageStr>}
+
+    </div>
+</body>
+<script>
+    
+    $(function(){
+
+        //注册回车查找
+        $("#input").keydown(function(event){
+            if(event.keyCode == 13){
+                $("#research").click();
+            }
+        });
+        //查找
+        $("#research").click(function(){
+            if($("#input").val().length > 0){
+                if($("[name='type']").val() == "author"){
+                    var mode = "keyword";
+                }else if($("[name='type']").val() == "name"){
+                    var mode = "keyworda";
+				}else if($("[name='type']").val() == "press"){
+                    var mode = "keywordp";
+				}else if($("[name='type']").val() == "isbn"){
+                    var mode = "keywordi";
+				}else if($("[name='type']").val() == "num"){
+                    var mode = "bookId";
+                }
+                location.href = "?p=Admin&c=Book&a=index&"+ mode + "=" + $("#input").val();
+            }else{
+                alert("Please enter search criteria");
+            }
+        });
+
+        //删除
+        $(".delete").click(function(){
+            if(confirm("Are you sure to delete?")){
+                $.post({
+                    url: "?p=Admin&c=Book&a=delete",
+                    data: {"id":$(this).attr("bookId")},
+                    success:function(data){
+                        alert(data.message);
+                        location.reload();
+                    }
+                });
+            }
+        })
+    });
+
+</script>
+
+</html>

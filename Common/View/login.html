@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN" style="height: 100%;">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Book Lending Management System</title>
+    <script src="./Resources/jquery.min.js"></script>
+    <link rel="stylesheet" href="./Resources/bootstrap.min.css">
+    <script src="./Resources/bootstrap.min.js"></script>
+</head>
+
+<body style="background-image: url(./Resources/img/index.jpg);background-size:100% 100%;">
+
+<div class="login_main" style="width:1230px;height:500px;position: absolute;left:50%;top:50%;margin-left: -615px;margin-top: -250px;">
+   <div class="login_title" style="height:95px;text-align:center;margin-bottom:15px;">
+   <p style=" color:black;font-size: 40px;font-weight:900;letter-spacing:5px"><img src="./Resources/img/sign.jpg" style="width:100px;height:95px;margin-right:100px;"/>Book Lending Management System</p>
+    </div>
+   <div class="main_left"><img src=./Resources/img/library.jpg style="width:775px;height:405px;float:left;"></div>	
+    <div class="main_right">
+        <div class="login" style="width:450px;height:405px;float:right;padding: 30px 60px;background-color: rgba(240, 255, 255, 0.5);border-radius:20px;display: none;">
+            <h2 class="text-center">User Login</h2>
+            <form id="form" style="margin-top:20px;">
+                <div class="form-group">
+                    <div class="input-group" style="width:100%;margin-top:30px;">
+                        <input type="text" class="form-control" name="userId" placeholder="Please enter your account">
+                    </div>
+                </div>
+                <div class="form-group" style="margin-top:30px;">
+                    <div class="input-group" style="width:100%">
+                        <input type="password" class="form-control" name="password" placeholder="Please enter your password">
+                    </div>
+                </div>
+                <div class="form-group form-inline" style="margin-top:30px;">
+                    <div class="input-group" style="width:180px">
+                        <input type="text" class="form-control" name="verify" placeholder="Please enter verification code">
+                    </div>
+                    <div class="input-group">
+                        <img src="?p=Common&c=Login&a=showVerify" id="verifyPic" style="width:120px;height:40px;border-radius:4px;margin-left:20px;">
+                    </div>
+                </div>
+                <button type="button" class="form-control btn btn-primary" id="submit" style="margin-top:25px;height:50px">Login</button>
+				
+				
+				
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+
+    $(function(){
+        $(".login").fadeIn(800);
+        
+        //注册点击更换验证码事件
+        $("#verifyPic").click(function(){
+            $(this).attr('src',"?p=Common&c=Login&a=showVerify&" + Math.random()); 
+        });
+
+        //注册回车登陆事件
+        $("[name='verify']").keydown(function(event){
+            if(event.keyCode == 13){
+                $("#submit").click();
+            }
+        });
+        //登陆
+        $("#submit").click(function(){
+            if($("[name='userId']").val().length == 0 || $("[name='password']").val().length == 0){
+                alert("Please enter your account or password！");
+                return false;
+            }else if($("[name='verify']").val().length != 4){
+                alert("Verification code must be 4 digits！");
+                return false;
+            }
+            $.post({
+                url:"?p=Common&c=Login&a=login",
+                data:$("#form").serialize(),
+                success:function(data){
+                    if(data.code == 0 && data.admin == 1){
+                        //管理员登陆
+                        location.href = "?p=Admin&c=Index&a=index";
+                    }else if(data.code == 0 && data.admin == 0){
+                        //普通用户登陆
+                        location.href = "?p=Home&c=Index&a=index";
+                    }else{
+                        alert(data.message);
+                        $("#verifyPic").click();
+                        $("[name='verify']").val("");
+                    }
+                }
+            });
+        })
+    });
+</script>
+
+</html>

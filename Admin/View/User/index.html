@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Book Lending Management System</title>
+    <script src="./Resources/jquery.min.js"></script>
+    <link rel="stylesheet" href="./Resources/bootstrap.min.css">
+    <script src="./Resources/bootstrap.min.js"></script>
+    <style type="text/css">
+        td {
+            vertical-align: middle !important;
+        }
+    </style>
+</head>
+
+<body style="background-image: url(./Resources/img/background2.jpg);background-size:cover;">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav" aria-expanded="false">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="JavaScript:void(0)">
+                    <b>Book Lending Management System</b>
+                </a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="nav">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="?p=Admin&c=Index&a=index">Homepage</a>
+                    </li>
+                    <li>
+                        <a href="?p=Admin&c=Book&a=index">Book Management</a>
+                    </li>
+                    <li class="active">
+                        <a href="?p=Admin&c=User&a=index">User Management</a>
+                    </li>
+                    <li>
+                        <a href="?p=Admin&c=Borrow&a=index">Lending Management</a>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="JavaScript:void(0)" style="cursor:default">{<$smarty.session.userId>}</a>
+                    </li>
+                    <li>
+                        <a href="?p=Common&c=Login&a=logout">Logout</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+    <div class="container-fluid">
+        <div style="width:550px;" class="center-block">
+            <div class="form-inline">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Enter search content" id="input" style="width:180px;"
+                    {<if $mode == name>}value='{<$smarty.get.name>}'
+					{<else if $mode == userId>}value='{<$smarty.get.userId>}'
+					{<else if $mode == class>}value='{<$smarty.get.class>}'
+					{</if>}>
+                </div>
+                <div class="form-group">
+                    <select name="type" class="form-control">
+                        <option value="num" {<if $mode == userId>}selected{</if>}>ID Query</option>
+                        <option value="name" {<if $mode == name>}selected{</if>}>Name Query</option>
+						<option value="class" {<if $mode == class>}selected{</if>}>Library Query</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button type="button" id="research" class="btn btn-primary">Search</button>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <a class="btn btn-info pull-right" href="?p=Admin&c=User&a=add" style="margin:15px 10px 10px;">Add User</a>
+            <table class="table table-bordered table-hover text-center">
+                <thead>
+                    <tr class="active">
+                        <th class="text-center">User ID</th>
+                        <th class="text-center">Name</th>
+                        <th class="text-center">Library</th>
+                        <th class="text-center">Last log in time</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center" style="width:70px;">Operation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {<if empty($users)>}
+                        <tr>
+                            <td colspan="6">No record！</td>
+                        </tr>
+                    {</if>}
+                    {<foreach $users as $user>}
+                        <tr>
+                            <td>{<$user.id>}</td>
+                            <td>{<$user.name>}</td>
+                            <td>{<$user.class>}</td>
+                            <td>{<$user.last_login_time>}</td>
+                            {<if $user.status == 1>}
+                                <td class="success">Normal</td>
+                            {<else>}
+                                <td class="danger">Report the loss</td>
+                            {</if>}
+                            <td>
+                                <a href="?p=Admin&c=User&a=manage&id={<$user.id>}" class="btn btn-primary btn-xs">Details</a>
+                            </td>
+                        </tr>
+                    {</foreach>}
+                </tbody>
+            </table>
+        </div>
+        <!-- 分页 -->
+        {<$pageStr>}
+</body>
+<script>
+
+    $(function(){
+
+        //注册回车查找
+        $("#input").keydown(function(event){
+            if(event.keyCode == 13){
+                $("#research").click();
+            }
+        });
+        //查找
+        $("#research").click(function(){
+            if($("#input").val().length > 0){
+                if($("[name='type']").val() == "name"){
+                    var mode = "name";
+                }else if($("[name='type']").val() == "num"){
+                    var mode = "userId";
+                }else if($("[name='type']").val() == "class"){
+                    var mode = "class";
+                }
+                location.href = "?p=Admin&c=User&a=index&"+ mode + "=" + $("#input").val();
+            }else{
+                alert("Please enter search criteria");
+            }
+        });
+
+    })
+
+</script>
+
+</html>
